@@ -68,5 +68,24 @@ def delete_book(id):
     return "Item was successfully deleted"
 
 
+@app.route("/book/<id>", methods=["GET"])
+def get_book(id):
+    book = Book.query.get(id)
+    return jsonify(book_schema.dump(book))
+
+
+@app.route("/book/<id>", methods=["PUT"])
+def update_book(id):
+    book = Book.query.get(id)
+
+    book.title = request.json['title']
+    book.author = request.json['author']
+    book.description = request.json['description']
+    book.price = request.json['price']
+
+    db.session.commit()
+    return jsonify(book_schema.dump(book))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
